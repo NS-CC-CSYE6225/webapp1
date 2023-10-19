@@ -86,7 +86,10 @@ build {
       "sudo systemctl enable mariadb",
       "sudo systemctl start mariadb",
       "ls -al",
+      "pwd",
       "unzip -d webapp1 webapp1.zip",
+      "ls -al",
+      "pwd"
       "cd webapp1 || exit",
       "ls -al",
       "sudo apt-get purge -y git",
