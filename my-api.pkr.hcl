@@ -74,6 +74,10 @@ source "amazon-ebs" "my-ami" {
 build {
   sources = ["source.amazon-ebs.my-ami"]
 
+  provisioner "file" {
+    source      = "webapp1.zip"
+    destination = "/home/admin/webapp1.zip"
+  }
 
   provisioner "shell" {
     inline = [
@@ -96,11 +100,5 @@ build {
       "cat .env"
     ]
   }
-
-  provisioner "file" {
-    source      = "webapp1.zip"
-    destination = "/home/admin/webapp1.zip"
-  }
-
 
 }
