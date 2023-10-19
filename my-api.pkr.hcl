@@ -86,8 +86,8 @@ build {
       "sudo systemctl enable mariadb",
       "sudo systemctl start mariadb",
       "ls -al",
-      "unzip -d webapp webapp.zip",
-      "cd webapp || exit",
+      "unzip -d webapp1 webapp1.zip",
+      "cd webapp1 || exit",
       "ls -al",
       "sudo apt-get purge -y git",
       "cat .env"
@@ -95,8 +95,8 @@ build {
   }
 
   provisioner "file" {
-    source      = "webapp.zip"
-    destination = "/home/admin/webapp.zip"
+    source      = "webapp1.zip"
+    destination = "/home/admin/webapp1.zip"
   }
 
 

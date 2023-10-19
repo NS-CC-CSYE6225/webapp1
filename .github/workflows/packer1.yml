@@ -16,13 +16,13 @@ jobs:
     - name: Zip repository
       run: |
         # Create a zip file of the entire repository
-        zip -r webapp.zip .
+        zip -r webapp1.zip .
 
     - name: Upload artifact
       uses: actions/upload-artifact@v2
       with:
-        name: webapp
-        path: webapp.zip
+        name: webapp1
+        path: webapp1.zip
 
     - name: Install Packer
       run: |

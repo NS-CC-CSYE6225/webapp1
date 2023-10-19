@@ -51,15 +51,15 @@ jobs:
           pwd
           npm i
           ls -al
-          zip -r webapp.zip . -x ".git"
+          zip -r webapp1.zip . -x ".git"
           ls -al
           pwd
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
-          name: webapp
-          path: webapp.zip
+          name: webapp1
+          path: webapp1.zip
 
       - name: Print Working Directory
         run: |
