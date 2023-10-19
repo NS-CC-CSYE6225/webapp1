@@ -53,5 +53,14 @@ const db = require('../models/index');
 
     });
 
+
+//     db.sequelize.sync()
+//   .then(() => {
+//     console.log('Table created successfully');
+//   })
+//   .catch((error) => {
+//     console.error('Error creating table:', error);
+//   });
+
 module.exports = { User };
 

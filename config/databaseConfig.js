@@ -32,3 +32,6 @@ async function createDatabase() {
     }
   })();
   
+  // module.exports = {
+  //   bootstrapDatabase
+  // };
