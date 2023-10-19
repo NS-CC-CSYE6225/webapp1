@@ -36,13 +36,13 @@ jobs:
 
     - name: Format Packer Configuration
       run: |
-        if [ -n "$(packer fmt --check my-api.pkr.hcl)" ]; then
+        if [ -n "$(packer fmt --check myapi.pkr.hcl)" ]; then
           echo "Packer configuration needs formatting. Run 'packer fmt' locally and commit the changes.";
           exit 1;
         fi
     
     - name: Format Packer Configuration
-      run: packer fmt my-api.pkr.hcl
+      run: packer fmt myapi.pkr.hcl
 
     - name: Validate Packer Configuration
-      run: packer validate my-api.pkr.hcl
+      run: packer validate myapi.pkr.hcl
