@@ -89,7 +89,7 @@ build {
       "pwd",
       "unzip -d webapp1 webapp1.zip",
       "ls -al",
-      "pwd"
+      "pwd",
       "cd webapp1 || exit",
       "ls -al",
       "sudo apt-get purge -y git",
