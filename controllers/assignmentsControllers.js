@@ -90,7 +90,7 @@ const { Assignment } = require('../models/assignments');
         const username = fields[0];
         findId(username).then((id) => {
           if (id == assignment.user_id){
-            const { name, points, num_of_attemps, deadline} = req.body;
+            const { name, points, num_of_attemps, deadline } = req.body;
             const updatedData = {
               name: name,
               points: points,
@@ -105,7 +105,48 @@ const { Assignment } = require('../models/assignments');
     
       })
     }
-    // });
+
+
+//   async function updateAssignments(req, res) {
+//     const assignment_Id = req.params.id;
+//     const userToken = req.headers.authorization;
+//     const fields = Buffer.from(userToken.split(' ')[1], 'base64').toString().split(':');
+//     const username = fields[0];
+    
+//     try {
+//         const id = await findId(username);
+//         const assignment = await findAssignmentInfo(assignment_Id);
+
+//         console.log('ID:', id);
+//         console.log('User ID f-----rom Assignment:', assignment.user_id);
+
+
+//         if (id === assignment.user_id) {
+//             const { name, points, num_of_attemps, deadline, user_id } = req.body;
+//             const updatedData = {
+//                 name: name,
+//                 points: points,
+//                 num_of_attemps: num_of_attemps,
+//                 deadline: deadline,
+//                 user_id: user_id
+//             };
+            
+//             const updatedAssignment = await updateAssignment(assignment_Id, updatedData);
+            
+//             if (updatedAssignment) {
+//                 res.status(204).send();
+//             } else {
+//                 res.status(400).send('Assignment not found or not updated');
+//             }
+//         } else {
+//             res.status(401).send('Unauthorized');
+//         }
+//     } catch (error) {
+//         console.error('Error updating assignment:', error);
+//         res.status(500).send('Internal Server Error');
+//     }
+// }
+
   
     //Delete Assignment
     // router.delete('/v1/assignments/:id', authenticateUser, (req,res) => {

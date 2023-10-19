@@ -1,4 +1,5 @@
 const readCSV = require("./services/userService");
+// const bootstrapDatabase = require("./config/databaseConfig");
 const express = require("express");
 const config = require("./config/config");
 const router = require("./routes/assignmentsRoute");
@@ -39,5 +40,9 @@ app.listen(8080, () => {
   console.log(`Server is running on port ${8080}`);
 });
 
+// bootstrapDatabase;
 readCSV;
+
+module.exports = app;
+
 

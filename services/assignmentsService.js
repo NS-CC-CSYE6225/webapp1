@@ -1,5 +1,6 @@
 const { User } = require('../models/user');
 const { Assignment } = require('../models/assignments');
+// const db = require('../models');
 
 
 async function findId(pEmail){
@@ -42,16 +43,30 @@ console.log("User is ->" + User);
   }
   
   async function updateAssignment(assignmentId, updatedData) {
+
+    // console.log("updated", updatedData);
+
     try {
+      
         const [affectedRows, [updatedAssignment]] = await Assignment.update(updatedData, {
             where: { id: assignmentId },
             returning: true, 
         });
-  
+        console.log("updated", updatedAssignment);
+        // if (affectedRows > 0) {
+        //     console.log('Assignment updated successfully:', updatedAssignment);
+        //     return updatedAssignment;
+        // } 
+
         if (affectedRows > 0) {
-            console.log('Assignment updated successfully:', updatedAssignment);
-            return updatedAssignment;
-        } else {
+          if (Array.isArray(updatedAssignment)) {
+              const updatedAssignment = updatedAssignment[0];
+              console.log('Assignment updated successfully:', updatedAssignment);
+              return updatedAssignment;
+          }
+      }
+
+        else {
             console.log('Assignment not found or not updated');
             return null;
         }
@@ -64,7 +79,7 @@ console.log("User is ->" + User);
   
   async function deleteAssignmentById(assignmentId) {
     try {
-        const deletedRows = await db.sequelize.models.Assignment.destroy({
+        const deletedRows = await Assignment.destroy({
             where: { id: assignmentId },
         });
   
