@@ -1,0 +1,49 @@
+name: webapp
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  validate:
+
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:latest
+        env:
+          MYSQL_DATABASE: TestDb1
+          MYSQL_USER: root
+          MYSQL_ROOT_PASSWORD: Pa55w0rd@1
+        ports:
+          - 3306:3306
+        options: --health-cmd "mysqladmin ping" --health-interval 10s --health-timeout 5s --health-retries 5
+
+    steps:
+
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Copy File to /opt
+      run: |
+        cp users.csv /opt
+
+    - name: Setup Node.js environment
+      uses: actions/setup-node@v3.8.1
+      with:
+        node-version: '20'
+
+    - name: Install Dependencies
+      run: npm install
+
+    - name: Set up MySQL
+      run: |
+        npm install mysql
+        echo "Waiting for MySQL to be ready..."
+        npx wait-on tcp:localhost:3306
+        echo "MySQL is ready!"
+
+    - name: Run Tests
+      run: npm test
