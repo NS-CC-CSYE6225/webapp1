@@ -3,7 +3,7 @@ const router = express.Router();
 const db = require("../models")
 
 // Express route to check the database connection
-router.get('/healthz', (req, res) => {
+router.get('/', (req, res) => {
     db.sequelize
     .authenticate()
     .then(() => {
