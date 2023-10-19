@@ -1,0 +1,48 @@
+name: Packer Workflow
+
+on: 
+  pull_request: 
+    branches:
+      - main
+
+jobs:
+  packer:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    
+    - name: Zip repository
+      run: |
+        # Create a zip file of the entire repository
+        zip -r webapp.zip .
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: webapp
+        path: webapp.zip
+
+    - name: Install Packer
+      run: |
+        sudo apt-get install unzip
+        wget https://releases.hashicorp.com/packer/1.7.7/packer_1.7.7_linux_amd64.zip
+        unzip packer_1.7.7_linux_amd64.zip
+        sudo mv packer /usr/local/bin/
+    
+    - name: Initialize Packer Plugins
+      run: packer init .
+
+    - name: Format Packer Configuration
+      run: |
+        if [ -n "$(packer fmt --check aws-debain.pkr.hcl)" ]; then
+          echo "Packer configuration needs formatting. Run 'packer fmt' locally and commit the changes.";
+          exit 1;
+        fi
+    
+    - name: Format Packer Configuration
+      run: packer fmt aws-debain.pkr.hcl
+
+    - name: Validate Packer Configuration
+      run: packer validate aws-debain.pkr.hcl
