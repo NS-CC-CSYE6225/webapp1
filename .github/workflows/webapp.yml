@@ -1,70 +1,49 @@
 name: webapp
 
-on: 
-  pull_request: 
+on:
+  pull_request:
     branches:
       - main
 
 jobs:
   validate:
-    
+
     runs-on: ubuntu-latest
 
     services:
-      postgres:
-        image: postgres:latest
+      mysql:
+        image: mysql:latest
         env:
-          POSTGRES_DB: webapp
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: password
+          MYSQL_DATABASE: TestDb1
+          MYSQL_USER: root
+          MYSQL_ROOT_PASSWORD: Pa55w0rd@1
         ports:
-          - 5432:5432
-        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+          - 3306:3306
+        options: --health-cmd "mysqladmin ping" --health-interval 10s --health-timeout 5s --health-retries 5
 
-    
     steps:
-    
+
     - name: Checkout Repository
       uses: actions/checkout@v2
-    
-    
 
     - name: Copy File to /opt
       run: |
         cp users.csv /opt
-    
-    
+
     - name: Setup Node.js environment
       uses: actions/setup-node@v3.8.1
       with:
-        node-version: '18'
+        node-version: '20'
 
-    - name: Clean npm cache and install n
-      run: |
-        sudo npm cache clean -f
-        sudo npm install -g n
-
-    - name: Install Node.js stable version
-      run: sudo n stable
-    
     - name: Install Dependencies
       run: npm install
 
-    
-    
-    - name: Set up PostgreSQL
+    - name: Set up MySQL
       run: |
-        npm install pg
-        echo "Waiting for PostgreSQL to be ready..."
-        npx wait-on tcp:localhost:5432
-        echo "PostgreSQL is ready!"
-    
-    
-    
-    # - name: Run Node.js Application
-    #   run: |
-    #     npx sequelize-cli db:create --config src/config/config.json
-    #     node index.js
+        npm install mysql
+        echo "Waiting for MySQL to be ready..."
+        npx wait-on tcp:localhost:3306
+        echo "MySQL is ready!"
 
     - name: Run Tests
       run: npm test
