@@ -73,4 +73,5 @@ jobs:
         run: |
           ls -al
           pwd
+          # cd /home/runner/work/webapp1/webapp1
           packer build my-ami.pkr.hcl
