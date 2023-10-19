@@ -1,0 +1,76 @@
+name: packer_ami
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-ami:
+    runs-on: ubuntu-latest
+    
+    services:
+      mysql:
+        image: mysql:latest
+        env:
+          MYSQL_ROOT_PASSWORD: Pa55w0rd@1
+          MYSQL_DATABASE: TestDb1
+        ports:
+          - 3306:3306
+        options: --health-cmd "mysqladmin ping" --health-interval 10s --health-timeout 5s --health-retries 5
+
+    steps:
+      - name: Check Out Repository
+        uses: actions/checkout@v2
+
+      - name: Set Up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20'
+
+    - name: Install Dependencies
+      run: npm install
+
+    - name: Run Tests
+      run: npm test
+
+  packer-build:
+    runs-on: ubuntu-latest
+
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Zip Repository
+        run: |
+          ls -al
+          pwd
+          npm i
+          ls -al
+          zip -r webapp.zip . -x ".git"
+          ls -al
+          pwd
+    
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: webapp
+          path: webapp.zip
+      
+      - name: Print Working Directory
+        run: |
+          ls -al
+          pwd
+
+      - name: Install Packer plugins
+        run: packer init .
+  
+      - name: Build Packer Template
+        run: |
+          ls -al
+          pwd
+          packer build my-ami.pkr.hcl
