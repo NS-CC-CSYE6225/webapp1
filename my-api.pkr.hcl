@@ -97,7 +97,6 @@ build {
       "cd webapp1 || exit",
       "ls -al",
       "sudo apt-get purge -y git",
-      "cat .env"
     ]
   }
 
