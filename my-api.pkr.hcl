@@ -23,18 +23,10 @@ variable "subnet_id" {
   default = "subnet-0c5c5cf90bdd60078"
 }
 
-
-// variable "ami_name" {
-//   type    = string
-//   default = "csye6225_f23_${formatdate("YYYY_MM_DD_hh_mm_ss", timestamp())}"
-// }
-
-
-
-// variable "source_ami" {
-//   type    = string
-//   default = "ami-06db4d78cb1d3bbf9"
-// }
+variable "db_root_password" {
+  type    = string
+  default = "Pa55w0rd@1"
+}
 
 
 source "amazon-ebs" "my-ami" {
@@ -89,6 +81,8 @@ build {
       "sudo apt install -y mariadb-server",
       "sudo systemctl enable mariadb",
       "sudo systemctl start mariadb",
+      "echo -e '\\n\\N\\nY\\n${var.db_root_password}\\n${var.db_root_password}\\nN\\nN\\nN\\nY\\n' | sudo mysql_secure_installation",
+      "sudo mysql -uroot -p${var.db_root_password} -e \"GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' IDENTIFIED BY '${var.db_root_password}' WITH GRANT OPTION; FLUSH PRIVILEGES;\"",
       "ls -al",
       "pwd",
       "unzip -d webapp1 webapp1.zip",
