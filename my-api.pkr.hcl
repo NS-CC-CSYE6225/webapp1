@@ -7,7 +7,7 @@ packer {
   }
 }
 
-variable "aws_region"   {
+variable "aws_region" {
   type    = string
   default = "us-east-1"
 }
@@ -32,7 +32,7 @@ variable "db_root_password" {
 source "amazon-ebs" "my-ami" {
   ami_name        = "csye6225_f23_${formatdate("YYYY_MM_DD_hh_mm_ss", timestamp())}"
   instance_type   = "t3.medium"
-  region          = "${var.aws_region}"
+  region          = "${var.aws_regions}"
   ssh_username    = "${var.ssh_username}"
   subnet_id       = "${var.subnet_id}"
   ami_description = "AMI for CSYE 6225 Assignment5"
