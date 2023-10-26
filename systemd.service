@@ -1,0 +1,14 @@
+[Unit]
+Description=My Web Application
+ConditionPathExists=/home/admin/webapp1/
+
+[Service]
+Type=simple
+User=csye6225
+Group=csye6225
+WorkingDirectory=/home/admin/webapp1
+ExecStart=/usr/bin/node /home/admin/webapp1/index.js
+Restart=always
+
+[Install]
+WantedBy=cloud-init.target
