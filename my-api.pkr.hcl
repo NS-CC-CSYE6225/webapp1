@@ -93,14 +93,14 @@ build {
       "sudo cp users.csv /opt",
       "sudo apt-get purge -y git",
       "echo \"STARTING SYSTEMD COMMANDS\"",
-      "echo \"Copying myapp-systemd.service file to /etc/systemd/system/\"",
-      "sudo cp ./systemd/myapp-systemd.service /etc/systemd/system/",
+      "echo \"Copying systemd.service file to /etc/systemd/system/\"",
+      "sudo cp ./systemd/systemd.service /etc/systemd/system/",
       "echo \"Creating group and user\"",
       "sudo groupadd csye6225",
       "sudo useradd -s /bin/false -g csye6225 -d /opt/csye6225 -m csye6225",
       "echo \"STARTING MYWEBAPP\"",
-      "sudo systemctl enable myapp-systemd",
-      "sudo systemctl start myapp-systemd",
+      "sudo systemctl enable systemd",
+      "sudo systemctl start systemd",
     ]
   }
 
