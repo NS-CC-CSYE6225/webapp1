@@ -5,13 +5,6 @@
     sudo apt-get install unzip -y
     sudo apt-get install nodejs -y
     sudo apt-get install npm -y
-    sudo apt install -y mariadb-server
-    sudo systemctl enable mariadb
-    sudo systemctl start mariadb
-    #echo -e '\\n\\N\\nY\\n${var.db_root_password}\\n${var.db_root_password}\\nN\\nN\\nN\\nY\\n' | sudo mysql_secure_installation
-    sudo mysql -uroot -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH 'mysql_native_password' BY '${var.db_root_password}';"
-    #sudo mysql -uroot -p${var.db_root_password} -e "GRANT ALL PRIVILEGES ON . TO 'root'@'localhost' IDENTIFIED BY '${var.db_root_password}' WITH GRANT OPTION; FLUSH PRIVILEGES;"
-    sudo mysql -uroot -p"${var.db_root_password}" -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' IDENTIFIED BY '${var.db_root_password}' WITH GRANT OPTION; FLUSH PRIVILEGES;"
     ls -al
     pwd
     unzip -d webapp1 webapp1.zip
