@@ -72,36 +72,11 @@ build {
   }
 
   provisioner "shell" {
-    inline = [
-      "ls -al",
-      "sudo apt-get update",
-      "sudo apt-get install unzip -y",
-      "sudo apt-get install nodejs -y",
-      "sudo apt-get install npm -y",
-      "sudo apt install -y mariadb-server",
-      "sudo systemctl enable mariadb",
-      "sudo systemctl start mariadb",
-      "echo -e '\\n\\N\\nY\\n${var.db_root_password}\\n${var.db_root_password}\\nN\\nN\\nN\\nY\\n' | sudo mysql_secure_installation",
-      "sudo mysql -uroot -p${var.db_root_password} -e \"GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' IDENTIFIED BY '${var.db_root_password}' WITH GRANT OPTION; FLUSH PRIVILEGES;\"",
-      "ls -al",
-      "pwd",
-      "unzip -d webapp1 webapp1.zip",
-      "ls -al",
-      "pwd",
-      "cd webapp1 || exit",
-      "ls -al",
-      "sudo cp users.csv /opt",
-      "sudo apt-get purge -y git",
-      "echo \"STARTING SYSTEMD COMMANDS\"",
-      "echo \"Copying systemd.service file to /etc/systemd/system/\"",
-      "sudo cp systemd.service /etc/systemd/system/",
-      "echo \"Creating group and user\"",
-      "sudo groupadd csye6225",
-      "sudo useradd -s /bin/false -g csye6225 -d /opt/csye6225 -m csye6225",
-      "echo \"STARTING MYWEBAPP\"",
-      "sudo systemctl enable systemd",
-      "sudo systemctl start systemd",
+   environment_vars = [
+      "DEBIAN_FRONTEND=noninteractive",
+      "CHECKPOINT_DISABLE=1",
     ]
-  }
+    script = "scripts/build.sh"
+  } 
 
 }
