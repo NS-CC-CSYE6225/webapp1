@@ -35,7 +35,7 @@
     fi
     
     # Copy the CloudWatch Agent configuration file
-    sudo cp cloudwatch-config.json /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json
+    sudo cp amazon-cloudwatch-agent.json /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json
     if [ $? -eq 0 ]; then
         echo "=============================== Copied the CloudWatch Agent configuration file ==============================="
     else
