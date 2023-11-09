@@ -1,5 +1,5 @@
 const StatsD = require("hot-shots");
-const logger = require("./cloudwatch-log");
+const logger = require("./logger");
 
 const statsdClient = new StatsD({
   prefix: "webapp-service",
@@ -9,4 +9,6 @@ const statsdClient = new StatsD({
   },
 });
 
-module.exports = statsdClient;
+module.exports = {
+    statsdClient,
+};
