@@ -1,8 +1,11 @@
 const { findId, findAssignmentInfo, updateAssignment, deleteAssignmentById } = require("../services/assignmentsService");
 const { Assignment } = require('../models/assignments');
+const logger = require('../CloudWatch/logger').logger;
+const statsdClient = require("../CloudWatch/statsd").statsdClient;
 
 
 async function createAssignment(req, res) {
+  statsdClient.increment("createAssignment.count");
   const userToken = req.headers.authorization;
   const fields = Buffer.from(userToken.split(' ')[1], 'base64').toString().split(':');
   const username = fields[0];
@@ -24,13 +27,14 @@ async function createAssignment(req, res) {
         "assignment_created": newAssignment.assignment_created,
         "assignment_updated": newAssignment.assignment_updated
       };
-
+      logger.info("INFO: Created assignment (HTTP Status: 201 CREATED)");
       return res.status(201).json(response).send();
     });
   })
 }
 
 async function getAllAssignments(req, res) {
+  statsdClient.increment("getAllAssignments.count");
   Assignment.findAll()
     .then((assignments) => {
       let response = [];
@@ -46,11 +50,13 @@ async function getAllAssignments(req, res) {
         }
         response.push(assignment);
       }
+      logger.info("INFO: Fetched all assignments (HTTP Status: 200 OK)");
       return res.status(200).json(response).send();
     })
 }
 
 async function getAssignment(req, res) {
+  statsdClient.increment("getAssignment.count");
   const assignmentId = req.params.id;
   findAssignmentInfo(assignmentId).then((assignment) => {
     let response = [
@@ -64,12 +70,14 @@ async function getAssignment(req, res) {
         "assignment_updated": assignment.assignment_updated
       }
     ]
+    logger.info(`INFO: Fetched assignment with with ID: ${assignmentId} (HTTP Status: 200 OK)`);
     return res.status(200).json(response).send();
   })
 }
 
 
 async function updateAssignments(req, res) {
+  statsdClient.increment("updateAssignments.count");
   try {
     const assignment_Id = req.params.id;
     const userToken = req.headers.authorization;
@@ -88,23 +96,28 @@ async function updateAssignments(req, res) {
         deadline: deadline
       };
 
-      const updatedAssignment = await updateAssignment(assignment_Id, updatedData);
+      const updatedAssignment = await updateAssignment(assignment_Id, updatedData);ß
 
       if (updatedAssignment) {
+        logger.info(`INFO: Updated assignment ID ${assignment_Id} (HTTP Status: 204 NO CONTENT)`);
         return res.status(204).send();
       } else {
+        logger.error("ERROR: Assignment not found (HTTP Status: 404 NOT FOUND)");
         return res.status(404).send('Assignment not found or not updated');
       }
     } else {
+      logger.error("ERROR: Unauthorized (HTTP Status: 401 UNAUTHORIZED)");
       return res.status(401).send('Unauthorized');
     }
   } catch (error) {
     console.error('Error in updateAssignments:', error);
-    return res.status(500).send('Internal Server Error');
+    logger.error("ERROR: Failed to update assignment (HTTP Status: 400 BAD REQUEST)");
+    return res.status(400).send('Bad Request');
   }
 }
 
 async function deleteAssignment(req, res) {
+  statsdClient.increment("deleteAssignment.count");
   const assignmentId = req.params.id;
   findAssignmentInfo(assignmentId).then((assignment) => {
     const userToken = req.headers.authorization;
@@ -114,6 +127,7 @@ async function deleteAssignment(req, res) {
       if (id == assignment.user_id) {
 
         deleteAssignmentById(assignmentId).then(() => {
+          logger.info(`INFO: Deleted assignment ID ${assignmentId}(HTTP Status: 204 NO CONTENT)`);
           return res.status(204).send();
         });
       }
