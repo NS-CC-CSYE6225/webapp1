@@ -27,7 +27,7 @@
     fi
     
     # installing cloud watch
-    sudo dpkg -i amazon-cloudwatch-agent.deb
+    sudo dpkg -i -E amazon-cloudwatch-agent.deb
     if [ $? -eq 0 ]; then
         echo "=============================== installed cloud watch ==============================="
     else
@@ -35,7 +35,7 @@
     fi
     
     # Copy the CloudWatch Agent configuration file
-    sudo cp /home/admin/webapp1/amazon-cloudwatch-agent.json /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json
+    sudo cp /home/admin/amazon-cloudwatch-agent.json /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json
     if [ $? -eq 0 ]; then
         echo "=============================== Copied the CloudWatch Agent configuration file ==============================="
     else
