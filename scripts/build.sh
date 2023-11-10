@@ -34,7 +34,7 @@
     sudo systemctl start systemd
 
     # wget cloud watch
-    wget https://amazoncloudwatch-agent.s3.amazonaws.com/debian/amd64/latest/amazon-cloudwatch-agent.deb
+    sudo wget https://amazoncloudwatch-agent.s3.amazonaws.com/debian/amd64/latest/amazon-cloudwatch-agent.deb
     if [ $? -eq 0 ]; then
         echo "=============================== fetched cloudwatch deb file ==============================="
     else
