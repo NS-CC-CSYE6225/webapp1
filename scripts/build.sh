@@ -13,7 +13,7 @@
     unzip -d /opt/csye6225/webapp1 webapp1.zip
     ls -al
     pwd
-    cd /opt/csye6225/webapp1 || exit
+    sudo cd /opt/csye6225/webapp1 || exit
     ls -al
     sudo cp users.csv /opt
     if [ $? -eq 0 ]; then
