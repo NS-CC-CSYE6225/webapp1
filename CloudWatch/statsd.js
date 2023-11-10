@@ -1,5 +1,5 @@
 const StatsD = require("hot-shots");
-const logger = require("./logger");
+const logger = require("./logger").logger;
 
 const statsdClient = new StatsD({
   prefix: "webapp-service",

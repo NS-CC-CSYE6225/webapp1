@@ -1,11 +1,12 @@
 const { findPwd } = require("../services/assignmentsService");
 const bcrypt = require('bcrypt');
-
+const logger = require('../CloudWatch/logger').logger;
 // Middleware for authenticating users based on tokens
 const authenticateUser = (req, res, next) => {
     const userToken = req.headers.authorization;
 
     if (!userToken) {
+      logger.error("ERROR: Unauthorized Access (HTTP Status: 401 UNAUTHORIZED)");
       return res.status(401).json({ error: 'Unauthorized' });
     }
     
@@ -18,6 +19,7 @@ const authenticateUser = (req, res, next) => {
             if (err) {
                 // Handle error
                 console.error(err);
+                logger.error("ERROR: Unauthorized Access (HTTP Status: 401 UNAUTHORIZED)");
                 return res.status(401).send('Authorization Error'); 
             } else {
                 if (result) {
@@ -27,12 +29,14 @@ const authenticateUser = (req, res, next) => {
                 } else {
                     // Passwords do not match
                     console.log('Wrong Password');
+                    logger.error("ERROR: Unauthorized Access (HTTP Status: 401 UNAUTHORIZED)");
                     return res.status(401).send('Password Error');
                 }
             }
       });
     }).catch((error) => {
       console.error('Unauthorized', error);
+      logger.error("ERROR: Unauthorized Access (HTTP Status: 401 UNAUTHORIZED)");
       return res.status(401).send('Catch Authorization Error');
     });
 
