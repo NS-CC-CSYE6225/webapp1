@@ -10,10 +10,10 @@
     echo "Creating group and user"
     sudo groupadd csye6225
     sudo useradd -s /bin/false -g csye6225 -d /opt/csye6225 -m csye6225
-    unzip -d /opt/csye6225/webapp1 webapp1.zip
+    sudo unzip -d /opt/csye6225/webapp1 webapp1.zip
     ls -al
     pwd
-    sudo cd /opt/csye6225/webapp1 || exit
+    cd /opt/csye6225/webapp1 || exit
     ls -al
     sudo cp users.csv /opt
     if [ $? -eq 0 ]; then
@@ -25,6 +25,9 @@
     echo "STARTING SYSTEMD COMMANDS"
     echo "Copying systemd.service file to /etc/systemd/system/"
     sudo cp systemd.service /etc/systemd/system/
+
+    # Modifying Permissions
+    sudo chown -R csye6225:csye6225 /opt/csye6225/webapp1
     
     echo "STARTING MYWEBAPP"
     sudo systemctl enable systemd
