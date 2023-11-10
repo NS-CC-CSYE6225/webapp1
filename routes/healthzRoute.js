@@ -2,13 +2,13 @@ const express = require('express');
 const router = express.Router();
 const db = require("../models");
 const logger = require("../CloudWatch/logger").logger;
-const sd = require("../CloudWatch/statsd").statsdClient;
+const statsdClient = require("../CloudWatch/statsd").statsdClient;
 // const { log } = require('winston');
 
 // Express route to check the database connection
 router.get('/', (req, res) => {
     
-    sd.statsdClient.increment("Healthz counter");
+    statsdClient.increment("Healthz counter");
     db.sequelize
     .authenticate()
     .then(() => {
