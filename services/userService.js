@@ -26,7 +26,7 @@ async function createUser(userData) {
     try { 
       console.log("email is " + userData.email);
       // Check if the email already exists
-      const existingUser = await db.sequelize.models.user.findOne({
+      const existingUser = await User.findOne({
         where: {
           email: userData.email,
         },
