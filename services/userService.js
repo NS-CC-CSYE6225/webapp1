@@ -1,6 +1,6 @@
 const fs = require('fs');
 const csv = require('csv-parser');
-// const { User } = require('../models/user');
+const { User } = require('../models/user');
 const db = require('../models');
     
 function readCSV() {
@@ -24,6 +24,7 @@ function readCSV() {
 
 async function createUser(userData) {
     try { 
+      console.log("email is " + userData.email);
       // Check if the email already exists
       const existingUser = await db.sequelize.models.user.findOne({
         where: {
@@ -36,13 +37,13 @@ async function createUser(userData) {
         return;
       }
 
-    console.log("bjf" + db.sequelize.models.User);
+    console.log("bjf" + User);
 
     console.log("tjf " + userData.first_name);
 
   
       // If email doesn't exist, create the user
-      const user = await db.sequelize.models.User.create({
+      const user = await User.create({
         first_name: userData.first_name,
         last_name: userData.last_name,
         password: userData.password,
@@ -60,9 +61,13 @@ async function createUser(userData) {
 
 readCSV()
   .then((results) => {
-    for (let i=0; i<results.length; i++){
+    db.sequelize.sync().then(() => {
+      for (let i=0; i<results.length; i++){
+        console.log(results[i]);
         createUser(results[i]);
     }
+    })
+    
   })
   .catch((error) => {
     console.error('Error reading CSV:', error);
