@@ -57,7 +57,7 @@
         echo "=============================== failed to Copy the CloudWatch Agent configuration file ==============================="
     fi
     
-    # # Fetch and apply the CloudWatch Agent configuration
+    # # Fetch and apply the CloudWatch Agent config
     # sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -c file:/opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json -s
     # if [ $? -eq 0 ]; then
     #     echo "=============================== Fetched and applied the CloudWatch Agent configuration ==============================="
