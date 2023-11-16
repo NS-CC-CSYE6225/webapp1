@@ -76,6 +76,54 @@ async function getAssignment(req, res) {
 }
 
 
+// async function updateAssignments(req, res) {
+//   statsdClient.increment("updateAssignments.count");
+//   try {
+//     const assignment_Id = req.params.id;
+//     const userToken = req.headers.authorization;
+//     const fields = Buffer.from(userToken.split(' ')[1], 'base64').toString().split(':');
+//     const username = fields[0];
+//     console.log("username====="+username);
+//     const id = await findId(username);
+//     console.log("id = " + id);
+//     const assignment = await findAssignmentInfo(assignment_Id);
+//     console.log("assignment = " + assignment.user_id);
+//     console.log("req.body.num_of_attemps--------= "+req.body.num_of_attemps);
+
+//     if (id === assignment.user_id) {
+//       const { name, points, num_of_attemps, deadline } = req.body;
+//       const updatedData = {
+//         name: name,
+//         points: points,
+//         num_of_attemps: num_of_attemps,
+//         deadline: deadline
+//       };
+
+//       console.log("updatedAssignment NAME--------= "+updatedData.name);
+//       console.log("updatedAssignment points ---------= "+updatedData.points);
+//       console.log("updatedAssignment NOA_--------= "+updatedData.num_of_attemps);
+//       console.log("updatedAssignment deadline--------= "+updatedData.deadline);
+//       const updatedAssignment = await updateAssignment(assignment_Id, updatedData);
+      
+//       if (updatedAssignment) {
+//         logger.info(`INFO: Updated assignment ID ${assignment_Id} (HTTP Status: 204 NO CONTENT)`);
+//         return res.status(204).send();
+//       } else {
+//         logger.error("ERROR: Assignment not found (HTTP Status: 404 NOT FOUND)");
+//         return res.status(404).send('Assignment not found or not updated');
+//       }
+//     } else {
+//       logger.error("ERROR: Unauthorized (HTTP Status: 401 UNAUTHORIZED)");
+//       return res.status(401).send('Unauthorized');
+//     }
+//   } catch (error) {
+//     console.error('Error in updateAssignments:', error);
+//     logger.error("ERROR: Failed to update assignment (HTTP Status: 400 BAD REQUEST)");
+//     return res.status(400).send('Bad Request');
+//   }
+// }
+
+
 async function updateAssignments(req, res) {
   statsdClient.increment("updateAssignments.count");
   try {
@@ -83,12 +131,13 @@ async function updateAssignments(req, res) {
     const userToken = req.headers.authorization;
     const fields = Buffer.from(userToken.split(' ')[1], 'base64').toString().split(':');
     const username = fields[0];
-    const id = await findId(username);
 
+    const id = await findId(username);
     const assignment = await findAssignmentInfo(assignment_Id);
 
     if (id === assignment.user_id) {
       const { name, points, num_of_attemps, deadline } = req.body;
+
       const updatedData = {
         name: name,
         points: points,
@@ -96,9 +145,12 @@ async function updateAssignments(req, res) {
         deadline: deadline
       };
 
-      const updatedAssignment = await updateAssignment(assignment_Id, updatedData);ß
+      // Use Assignment.update instead of updateAssignment function
+      const [updatedCount] = await Assignment.update(updatedData, {
+        where: { id: assignment_Id }
+      });
 
-      if (updatedAssignment) {
+      if (updatedCount > 0) {
         logger.info(`INFO: Updated assignment ID ${assignment_Id} (HTTP Status: 204 NO CONTENT)`);
         return res.status(204).send();
       } else {
@@ -115,6 +167,7 @@ async function updateAssignments(req, res) {
     return res.status(400).send('Bad Request');
   }
 }
+
 
 async function deleteAssignment(req, res) {
   statsdClient.increment("deleteAssignment.count");
