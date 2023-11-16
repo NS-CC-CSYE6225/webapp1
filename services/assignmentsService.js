@@ -41,9 +41,10 @@ async function findAssignmentInfo(assignmentId) {
 }
 
 async function updateAssignment(assignmentId, updatedData) {
-
+  console.log("assignmentId-------------------" + assignmentId);
   try {
-
+    console.log("assignmentId-------------------" + assignmentId);
+    console.log("updatedData-------------------" + updatedData);
     const [affectedRows, [updatedAssignment]] = await Assignment.update(updatedData, {
       where: { id: assignmentId },
       returning: true,
