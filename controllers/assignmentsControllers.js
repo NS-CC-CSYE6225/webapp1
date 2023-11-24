@@ -11,6 +11,24 @@ async function createAssignment(req, res) {
   const username = fields[0];
   findId(username).then((id) => {
     const { name, points, num_of_attemps, deadline } = req.body;
+
+    // Check for required fields
+    if (!name || !points || !num_of_attemps || !deadline) {
+      logger.error("ERROR: Required fields missing (HTTP Status: 400 BAD REQUEST)");
+      return res.status(400).send('Required fields missing');
+    }
+
+    // Check for valid values (e.g., float, negative values)
+    if (isNaN(parseFloat(points)) || points < 0) {
+      logger.error("ERROR: Invalid value for 'points' (HTTP Status: 400 BAD REQUEST)");
+      return res.status(400).send('Invalid value for "points"');
+    }
+
+    if (isNaN(parseInt(num_of_attemps)) || num_of_attemps < 0) {
+      logger.error("ERROR: Invalid value for 'num_of_attemps' (HTTP Status: 400 BAD REQUEST)");
+      return res.status(400).send('Invalid value for "num_of_attemps"');
+    }
+
     const assignment = Assignment.create({
       name: name,
       points: points,
@@ -76,54 +94,6 @@ async function getAssignment(req, res) {
 }
 
 
-// async function updateAssignments(req, res) {
-//   statsdClient.increment("updateAssignments.count");
-//   try {
-//     const assignment_Id = req.params.id;
-//     const userToken = req.headers.authorization;
-//     const fields = Buffer.from(userToken.split(' ')[1], 'base64').toString().split(':');
-//     const username = fields[0];
-//     console.log("username====="+username);
-//     const id = await findId(username);
-//     console.log("id = " + id);
-//     const assignment = await findAssignmentInfo(assignment_Id);
-//     console.log("assignment = " + assignment.user_id);
-//     console.log("req.body.num_of_attemps--------= "+req.body.num_of_attemps);
-
-//     if (id === assignment.user_id) {
-//       const { name, points, num_of_attemps, deadline } = req.body;
-//       const updatedData = {
-//         name: name,
-//         points: points,
-//         num_of_attemps: num_of_attemps,
-//         deadline: deadline
-//       };
-
-//       console.log("updatedAssignment NAME--------= "+updatedData.name);
-//       console.log("updatedAssignment points ---------= "+updatedData.points);
-//       console.log("updatedAssignment NOA_--------= "+updatedData.num_of_attemps);
-//       console.log("updatedAssignment deadline--------= "+updatedData.deadline);
-//       const updatedAssignment = await updateAssignment(assignment_Id, updatedData);
-      
-//       if (updatedAssignment) {
-//         logger.info(`INFO: Updated assignment ID ${assignment_Id} (HTTP Status: 204 NO CONTENT)`);
-//         return res.status(204).send();
-//       } else {
-//         logger.error("ERROR: Assignment not found (HTTP Status: 404 NOT FOUND)");
-//         return res.status(404).send('Assignment not found or not updated');
-//       }
-//     } else {
-//       logger.error("ERROR: Unauthorized (HTTP Status: 401 UNAUTHORIZED)");
-//       return res.status(401).send('Unauthorized');
-//     }
-//   } catch (error) {
-//     console.error('Error in updateAssignments:', error);
-//     logger.error("ERROR: Failed to update assignment (HTTP Status: 400 BAD REQUEST)");
-//     return res.status(400).send('Bad Request');
-//   }
-// }
-
-
 async function updateAssignments(req, res) {
   statsdClient.increment("updateAssignments.count");
   try {
@@ -138,6 +108,16 @@ async function updateAssignments(req, res) {
     if (id === assignment.user_id) {
       const { name, points, num_of_attemps, deadline } = req.body;
 
+      if (points !== undefined && (isNaN(parseFloat(points)) || points < 0)) {
+        logger.error("ERROR: Invalid value for 'points' (HTTP Status: 400 BAD REQUEST)");
+        return res.status(400).send('Invalid value for "points"');
+      }
+
+      if (num_of_attemps !== undefined && (isNaN(parseInt(num_of_attemps)) || num_of_attemps < 0)) {
+        logger.error("ERROR: Invalid value for 'num_of_attemps' (HTTP Status: 400 BAD REQUEST)");
+        return res.status(400).send('Invalid value for "num_of_attemps"');
+      }
+
       const updatedData = {
         name: name,
         points: points,
@@ -145,7 +125,6 @@ async function updateAssignments(req, res) {
         deadline: deadline
       };
 
-      // Use Assignment.update instead of updateAssignment function
       const [updatedCount] = await Assignment.update(updatedData, {
         where: { id: assignment_Id }
       });
@@ -179,10 +158,19 @@ async function deleteAssignment(req, res) {
     findId(username).then((id) => {
       if (id == assignment.user_id) {
 
+        // Check for presence of body in DELETE request
+        if (req.body && Object.keys(req.body).length > 0) {
+          logger.error("ERROR: Body not allowed in DELETE request (HTTP Status: 400 BAD REQUEST)");
+          return res.status(400).send('Body not allowed in DELETE request');
+        }
+
         deleteAssignmentById(assignmentId).then(() => {
           logger.info(`INFO: Deleted assignment ID ${assignmentId}(HTTP Status: 204 NO CONTENT)`);
           return res.status(204).send();
         });
+      } else {
+        logger.error("ERROR: Unauthorized deletion attempt (HTTP Status: 401 UNAUTHORIZED)");
+        return res.status(401).send('Unauthorized deletion attempt');
       }
     });
 
