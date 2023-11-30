@@ -5,7 +5,8 @@
     "database": "TestDb1",
     "host": "localhost",
     "dialect": "mysql",
-    "port": "3306"
+    "port": "3306",
+    "TOPIC_ARN": "arn:aws:sns:us-east-1:184985182931:sns-topic-3861cb6"
   },
   "test": {
     "username": "root",
