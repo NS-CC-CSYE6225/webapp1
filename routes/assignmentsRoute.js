@@ -5,7 +5,7 @@ const authenticateUser = require("../middleware/assignmentMiddleware");
 router.use(express.json());
 router.use(express.urlencoded({ extended: true }));
 router.use(authenticateUser);
-const { createAssignment, getAllAssignments, getAssignment, updateAssignments, deleteAssignment } = require("../controllers/assignmentsControllers");
+const { createAssignment, getAllAssignments, getAssignment, updateAssignments, deleteAssignment, submitAssignment } = require("../controllers/assignmentsControllers");
 
 
 // API routes for assignments
@@ -19,6 +19,7 @@ router.get('/:id', getAssignment);
 router.put('/:id', bodyParser.json(), bodyParser.urlencoded({ extended: true }),updateAssignments);
 
 router.delete('/:id', bodyParser.json(), bodyParser.urlencoded({ extended: true }),deleteAssignment);
-  
+
+router.post('/:id', bodyParser.json(), bodyParser.urlencoded({ extended: true }),submitAssignment);
 
 module.exports = router;

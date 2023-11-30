@@ -36,7 +36,7 @@ const db = require('../models/index');
       validate:{
           notEmpty: true
       }
-  }
+    }
   
   },{
     assignment_created: 'Assignment_created',
