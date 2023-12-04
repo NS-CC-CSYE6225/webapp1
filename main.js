@@ -4,7 +4,7 @@ const app = express();
 const assignmentRouter = require("./routes/assignmentsRoute");
 const healthzRouter = require("./routes/healthzRoute");
 
-app.use('/v1/assignments', assignmentRouter);
+app.use('/v2/assignments', assignmentRouter);
 
 app.use('/healthz', healthzRouter);
 
