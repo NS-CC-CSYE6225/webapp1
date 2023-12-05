@@ -11,6 +11,7 @@ app.use('/healthz', healthzRouter);
 // app.use('/', (req, res) => {
 //     res.status(200).send(); // Sending 'OK' with a 200 status code
 //   });
+//
 
 app.use('/', (req, res , next) => {
   if(req.path === '/'){
